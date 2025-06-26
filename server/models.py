@@ -1,6 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 from sqlalchemy import MetaData
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy_serializer import SerializerMixin
+
+
 
 metadata = MetaData(
     naming_convention={
@@ -10,23 +14,29 @@ metadata = MetaData(
 
 db = SQLAlchemy(metadata=metadata)
 
-class Hero(db.Model):
+class Hero(db.Model,SerializerMixin):
     __tablename__ = "heroes"
     
     id =db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String,nullable=False)
     super_name = db.Column(db.String,nullable=False)
     
+    powers =relationship("HeroPower",back_populates="hero",cascade="all, delete-orphan")
+    
+    
     def __repr__(self):
         return f"<Hero {self.id}, {self.name}, {self.super_name}>"
     
 
-class Power(db.Model):
+class Power(db.Model,SerializerMixin):
     __tablename__ ="powers"
     
     id =db.Column(db.Integer,primary_key=True)
     name =db.Column(db.String)
     description = db.Column(db.String)
+    
+    
+    heroes =relationship("HeroPower",back_populates="power",cascade="all, delete-orphan")
     
     @validates("description")
     def validate_description(self, key, value):
@@ -38,13 +48,16 @@ class Power(db.Model):
     def __repr__(self):
         return f"<Power {self.id}, {self.name}, {self.description}>"
     
-class HeroPower(db.Model):
+class HeroPower(db.Model,SerializerMixin):
     __tablename__ = "hero_powers"
     
     id = db.Column(db.Integer, primary_key=True)
     strength=db.Column(db.String)
     hero_id =db.Column(db.Integer,db.ForeignKey("heroes.id"))
     power_id =db.Column(db.Integer,db.ForeignKey("powers.id"))
+    
+    hero =relationship("Hero",back_populates="powers")
+    power =relationship("power",back_populates="heroes")
     
     @validates("strength")
     def validate_strength(self,key,value ):
