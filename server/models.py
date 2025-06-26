@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Model
 from sqlalchemy.orm import validates
-
+from sqlalchemy import MetaData
 
 metadata = MetaData(
     naming_convention={
@@ -11,17 +10,18 @@ metadata = MetaData(
 
 db = SQLAlchemy(metadata=metadata)
 
-class Hero(db.model):
+class Hero(db.Model):
     __tablename__ = "heroes"
     
     id =db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String,nullable=False)
     super_name = db.Column(db.String,nullable=False)
     
-    
+    def __repr__(self):
+        return f"<Hero {self.id}, {self.name}, {self.super_name}>"
     
 
-class Power(db.model):
+class Power(db.Model):
     __tablename__ ="powers"
     
     id =db.Column(db.Integer,primary_key=True)
@@ -30,13 +30,18 @@ class Power(db.model):
     
     @validates("description")
     def validate_description(self, key, value):
-        if len(value) < 20:
+        if not value or len(value) < 20:
             raise ValueError("Description must be at least 20 characters long.")
         return value
 
-class HeroPower(db.model):
+
+    def __repr__(self):
+        return f"<Power {self.id}, {self.name}, {self.description}>"
+    
+class HeroPower(db.Model):
     __tablename__ = "hero_powers"
     
+    id = db.Column(db.Integer, primary_key=True)
     strength=db.Column(db.String)
     hero_id =db.Column(db.Integer,db.ForeignKey("heroes.id"))
     power_id =db.Column(db.Integer,db.ForeignKey("powers.id"))
@@ -50,5 +55,6 @@ class HeroPower(db.model):
         return value
     
     
-    
+    def __repr__(self):
+        return f"<HeroPower {self.hero_id}, {self.power_id}, {self.strength}>"
     

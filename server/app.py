@@ -1,5 +1,5 @@
 from flask import Flask
-from flaks_migrate import Migrate
+from flask_migrate import Migrate
 
 from models import db, Hero,Power,HeroPower
 
