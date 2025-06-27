@@ -23,6 +23,7 @@ class Hero(db.Model,SerializerMixin):
     
     powers =relationship("HeroPower",back_populates="hero",cascade="all, delete-orphan")
     
+    serialize_rules =("-powers.hero",)
     
     def __repr__(self):
         return f"<Hero {self.id}, {self.name}, {self.super_name}>"
@@ -44,7 +45,8 @@ class Power(db.Model,SerializerMixin):
             raise ValueError("Description must be at least 20 characters long.")
         return value
 
-
+    serialize_rules=("-heroes.power",)
+    
     def __repr__(self):
         return f"<Power {self.id}, {self.name}, {self.description}>"
     
@@ -59,6 +61,8 @@ class HeroPower(db.Model,SerializerMixin):
     hero =relationship("Hero",back_populates="powers")
     power =relationship("power",back_populates="heroes")
     
+    
+    serialize_rules =("-hero.powers","-power.heroes")
     @validates("strength")
     def validate_strength(self,key,value ):
         allowed =["Strong","Weak","Average"]
