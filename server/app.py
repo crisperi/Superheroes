@@ -17,7 +17,7 @@ api =Api(app)
 
 
 #registering routes 
-api.add_resource(HeroResource,"/heroes")
+api.add_resource(HeroResource,"/heroes", "/heroes/<int:id>")
 
 #setting up route 
 if __name__=="__main__":
