@@ -25,6 +25,13 @@ class Hero(db.Model,SerializerMixin):
     
     serialize_rules =("-powers.hero",)
     
+    def to_dict(self):
+        return {
+            "id":self.id,
+            "name":self.name,
+            "super_name":self.super_name
+        }
+    
     def __repr__(self):
         return f"<Hero {self.id}, {self.name}, {self.super_name}>"
     
@@ -59,7 +66,7 @@ class HeroPower(db.Model,SerializerMixin):
     power_id =db.Column(db.Integer,db.ForeignKey("powers.id"))
     
     hero =relationship("Hero",back_populates="powers")
-    power =relationship("power",back_populates="heroes")
+    power =relationship("Power",back_populates="heroes")
     
     
     serialize_rules =("-hero.powers","-power.heroes")
