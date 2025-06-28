@@ -28,4 +28,4 @@ class HeroPowerResource(Resource):
             db.session.rollback()
             return {"error": "validation errors"}, 400
             
-        return hero_power.to_dict(), 201
+        return hero_power.to_dict(), 203
