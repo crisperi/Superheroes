@@ -1,6 +1,7 @@
+from flask import request
+from flask_restful import Resource
+from models import Power, db
 
-from flask_Restful import Resource
-from models import Power
 
 class PowerResource(Resource):
     def get(self,id=None):
@@ -17,3 +18,15 @@ class PowerResource(Resource):
                 }
             else:
                 return {"error": "Power not found"}, 404    
+            
+    def patch(self,id):
+        power=Power.query.get(id)
+        if not power:
+            return {"error": "Power not found"}, 404
+        data= request.get_json()
+        if "description" in data : 
+            power.description = data["description"]
+        db.session.commit()
+        return power.to_dict(), 200
+    
+        

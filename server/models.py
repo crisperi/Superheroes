@@ -54,6 +54,13 @@ class Power(db.Model,SerializerMixin):
 
     serialize_rules=("-heroes.power",)
     
+    
+    def to_dict(self):
+        return {
+            "description": self.description,
+            "id": self.id,
+            "name": self.name
+        }
     def __repr__(self):
         return f"<Power {self.id}, {self.name}, {self.description}>"
     
@@ -78,6 +85,15 @@ class HeroPower(db.Model,SerializerMixin):
             raise ValueError(f"Strength must be one of {allowed}")
         return value
     
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "hero_id": self.hero_id,
+            "power_id": self.power_id,
+            "strength": self.strength,
+            "hero": self.hero.to_dict() if self.hero else None,
+            "power": self.power.to_dict() if self.power else None
+        }
     
     def __repr__(self):
         return f"<HeroPower {self.hero_id}, {self.power_id}, {self.strength}>"

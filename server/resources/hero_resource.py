@@ -12,8 +12,7 @@ class HeroResource(Resource):
                 return {
                     "id": hero.id,
                     "name": hero.name,
-                    "super_name": hero.super_name,
-                    "hero_powers": [hero_power.to_dict() for hero_power in hero.powers]
+                    "super_name": hero.super_name
                 }
             else:
                 return {"error": "Hero not found"}, 404

@@ -3,6 +3,8 @@ from flask_migrate import Migrate
 from models import db
 from flask_restful import Api
 from resources.hero_resource import HeroResource
+from resources.heropower_resource import HeroPowerResource
+from resources.power_resource import PowerResource
 
 
 app=Flask(__name__)
@@ -18,6 +20,8 @@ api =Api(app)
 
 #registering routes 
 api.add_resource(HeroResource,"/heroes", "/heroes/<int:id>")
+api.add_resource(HeroPowerResource,"/hero_powers")
+api.add_resource(PowerResource,"/powers", "/powers/<int:id>")
 
 #setting up route 
 if __name__=="__main__":
